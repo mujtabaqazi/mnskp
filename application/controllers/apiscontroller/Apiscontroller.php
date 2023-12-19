@@ -69,46 +69,45 @@
 		public function save_lmne($formdata = array(), $id=0) {
 			$data=array();
 			$formats = array("d.m.Y","d/m/Y","d-m-Y","Y-m-d","m-d-Y");
-			foreach($_POST as $key => $value) {
-				$data[$key] = ($value=='on')?1:(($value=='')?NULL:$value);
-				foreach ($formats as $format) {
-					if($key == "supply_avg_time") {
-					}
-					else {
-						$date = DateTime::createFromFormat($format, $data[$key]);
-						if ($date == false || !(date_format($date,$format) == $data[$key]) ) {
+			if (!empty($formdata)) {
+				foreach($formdata as $key => $value) {
+					$data[$key] = ($value=='on')?1:(($value=='')?NULL:$value);
+					foreach ($formats as $format) {
+						if($key == "supply_avg_time") {
 						}
-						else{
-							$data[$key] = date("Y-m-d",strtotime($data[$key]));
+						else {
+							$date = DateTime::createFromFormat($format, $data[$key]);
+							if ($date == false || !(date_format($date,$format) == $data[$key]) ) {
+							}
+							else{
+								$data[$key] = date("Y-m-d",strtotime($data[$key]));
+							}
 						}
 					}
 				}
-			}
-			$data["submitted_by"]=$this -> session -> id;
-			$data["date_submitted"]=date("Y-m-d");
-			$data["supply_avg_time"]="";
-			if($this->input->post("supply_avg_time[0]")!='') {
-				$data["supply_avg_time"] .= $this->input->post("supply_avg_time[0]")." week(s) ";
-				unset($data["supply_avg_time[0]"]);
-			}
+				$data["submitted_by"]=$this -> session -> id;
+				$data["date_submitted"]=date("Y-m-d");
+				$data["supply_avg_time"]="";
+				if($formdata["supply_avg_time[0]"] != '') {
+					$data["supply_avg_time"] .= $formdata["supply_avg_time[0]"]." week(s) ";
+					unset($data["supply_avg_time[0]"]);
+				}
 
-			if($this->input->post("supply_avg_time[1]")!='') {
-				$data["supply_avg_time"] .= $this->input->post("supply_avg_time[1]")." month(s) ";
-				unset($data["supply_avg_time[1]"]);
-			}
+				if($formdata["supply_avg_time[1]"]!='') {
+					$data["supply_avg_time"] .= $formdata["supply_avg_time[1]"]." month(s) ";
+					unset($data["supply_avg_time[1]"]);
+				}
 
-			if($id>0) {
-				$data = $this -> Common_model -> update_record("lhw_logistics",$data,array("id" => $id));
-			}
-			else {
-				$data = $this -> Common_model -> insert_record("lhw_logistics",$data);
-			}
-
-			if($data > 0) {
-				redirect('lhw/listing/lmne',$data);
+				if($id>0) {
+					$dataupdate = $this->Apismodel->update_record("lhw_logistics",$data,array("id" => $id));
+				}
+				else {
+					$datainserted = $this->Apismodel->insert_record("lhw_logistics",$data);
+				}
+				echo '<pre>'; print_r($data); exit;
 			}
 			else{
-				redirect(base_url()."404");//echo "Error";
+				echo "Error"; exit;
 			}
 		}
 	}

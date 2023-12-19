@@ -75,5 +75,24 @@
 		}
 
 			//=============List all records to get approval from dho function ends=============//
+
+			//=============update record from table function starts=============//
+		
+		public function update_record($table, $data,$where){
+			$this->db->where($where);
+			$update=$this->db->update($table,$data);
+			return $update;
+		}
+		
+			//=============update record from table function ends===============//
+			
+			//=============insert record into table function starts===============//
+		
+		public function insert_record($table, $data){
+			$this->db->insert($table,$data);
+			return $this->db->insert_id();
+		}
+	
+			//=============insert record into table function ends===============//
 	}
 ?>
