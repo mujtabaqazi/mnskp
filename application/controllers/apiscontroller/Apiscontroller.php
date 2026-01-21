@@ -21,15 +21,12 @@
 			if (empty($ptype)) {
 				if (isset($_REQUEST['ptype'])) {
 					$ptype = $_REQUEST['ptype'];
-				}			}
+				}
+			}
 			if (empty($distcode)) {
 				if (isset($_REQUEST['distcode'])) {
 					$distcode = $_REQUEST['distcode'];
 				}
-			}
-
-			if(empty($dis)){
-				//done
 			}
 			if (empty($fmonth)) {
 				if (isset($_REQUEST['fmonth'])) {
